@@ -67,6 +67,14 @@ export function createKeyboardCommandHandler(
       });
     }
 
+    if (command === KeyboardCommandIds.CurrentTabLinkWithDate) {
+      return services.linkExportService.exportLink({
+        format: 'link-with-date',
+        title: currentTab.title || '',
+        url: currentTab.url || '',
+      });
+    }
+
     // Check if command is in the tab export lookup table
     if (command in TAB_EXPORT_COMMANDS) {
       const params = TAB_EXPORT_COMMANDS[command as TabExportCommandId]!;

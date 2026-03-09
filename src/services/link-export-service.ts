@@ -1,13 +1,17 @@
 import type { CustomFormatsProvider, MarkdownFormatter } from './shared-types.js';
 
 // Type Definitions
-export type LinkExportFormat = 'link' | 'custom-format';
+export type LinkExportFormat = 'link' | 'link-with-date' | 'custom-format';
 
 export interface LinkExportOptions {
   format: LinkExportFormat;
   title: string;
   url: string;
   customFormatSlot?: string | null;
+}
+
+export function formatYearMonth(date: Date): string {
+  return `${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, '0')}`;
 }
 
 export function validateLinkExportOptions(options: LinkExportOptions): void {
@@ -39,6 +43,7 @@ export class LinkExportService {
   constructor(
     private markdown: MarkdownFormatter,
     private customFormatsProvider: CustomFormatsProvider,
+    private nowProvider: () => Date = () => new Date(),
   ) { }
 
   /**
@@ -60,6 +65,12 @@ export class LinkExportService {
     switch (options.format) {
       case 'link':
         return this.markdown.linkTo(options.title, options.url);
+
+      case 'link-with-date': {
+        const title = options.title === '' ? '(No Title)' : this.markdown.escapeLinkText(options.title);
+        const yyyymm = formatYearMonth(this.nowProvider());
+        return `[${title} _${yyyymm}](${options.url})`;
+      }
 
       case 'custom-format':
         // We already validated that customFormatSlot exists

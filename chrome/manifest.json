@@ -1,5 +1,5 @@
 {
-  "name": "Copy as Markdown",
+  "name": "Markdown Clipper",
   "version": "3.5.0",
   "version_name": "3.5.0",
   "manifest_version": 3,
@@ -19,7 +19,7 @@
     "default_icon": {
       "128": "dist/static/images/icon-128.png"
     },
-    "default_title": "Copy as Markdown...",
+    "default_title": "Markdown Clipper...",
     "default_popup": "./dist/static/popup.html",
     "browser_style": true
   },
@@ -38,6 +38,9 @@
     },
     "current-tab-link": {
       "description": "current tab: [title](url)"
+    },
+    "current-tab-link-with-date": {
+      "description": "current tab with date: [title _date](url)"
     },
     "current-tab-custom-format-1": {
       "description": "current tab: custom format 1"

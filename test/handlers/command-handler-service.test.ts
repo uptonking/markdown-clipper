@@ -83,6 +83,23 @@ describe('keyboardCommandHandler', () => {
     });
   });
 
+  it('maps current-tab-link-with-date command', async () => {
+    const tab = createMockTab({ title: 'Title', url: 'https://example.com' });
+    const exportLinkMock = vi.fn(async () => '[Title _202603]');
+    const handler = createKeyboardCommandHandler(
+      { query: vi.fn(async () => [tab]) },
+      createServices({ linkExportService: { exportLink: exportLinkMock } }),
+    );
+
+    const result = await handler.handleCommand('current-tab-link-with-date', tab);
+    expect(result).toBe('[Title _202603]');
+    expect(exportLinkMock).toHaveBeenCalledWith({
+      format: 'link-with-date',
+      title: 'Title',
+      url: 'https://example.com',
+    });
+  });
+
   it('maps built-in tab export commands', async () => {
     const tab = createMockTab({ windowId: 7 });
     const exportTabsMock = vi.fn(async () => 'tabs');

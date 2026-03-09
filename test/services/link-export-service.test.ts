@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import {
+  formatYearMonth,
   LinkExportService,
   renderCustomFormatLink,
   validateLinkExportOptions,
@@ -40,6 +41,14 @@ describe('link Export Service - Pure Functions', () => {
       })).not.toThrow();
     });
 
+    it('should pass validation for link-with-date format', () => {
+      expect(() => validateLinkExportOptions({
+        format: 'link-with-date',
+        title: 'Example',
+        url: 'https://example.com',
+      })).not.toThrow();
+    });
+
     it('should throw error when custom-format is missing customFormatSlot', () => {
       expect(() => validateLinkExportOptions({
         format: 'custom-format',
@@ -55,6 +64,12 @@ describe('link Export Service - Pure Functions', () => {
         url: 'https://example.com',
         customFormatSlot: null,
       })).toThrow(/customFormatSlot is required/);
+    });
+  });
+
+  describe('formatYearMonth', () => {
+    it('formats date as YYYYMM', () => {
+      expect(formatYearMonth(new Date('2026-03-10T08:09:10Z'))).toBe('202603');
     });
   });
 
@@ -147,6 +162,47 @@ describe('linkExportService', () => {
         });
 
         expect(getMock).not.toHaveBeenCalled();
+      });
+
+      it('should export link in markdown format with date', async () => {
+        const mockProvider: CustomFormatsProvider = {
+          get: vi.fn().mockRejectedValue(new Error('Should not be called')),
+        };
+
+        const service = new LinkExportService(
+          mockMarkdown,
+          mockProvider,
+          () => new Date('2026-03-10T08:09:10Z'),
+        );
+
+        const result = await service.exportLink({
+          format: 'link-with-date',
+          title: 'Example',
+          url: 'https://example.com',
+        });
+
+        expect(result).toBe('[Example _202603](https://example.com)');
+        expect(mockProvider.get).not.toHaveBeenCalled();
+      });
+
+      it('should use default title when title is empty for link-with-date', async () => {
+        const mockProvider: CustomFormatsProvider = {
+          get: vi.fn().mockRejectedValue(new Error('Should not be called')),
+        };
+
+        const service = new LinkExportService(
+          mockMarkdown,
+          mockProvider,
+          () => new Date('2026-03-10T08:09:10Z'),
+        );
+
+        const result = await service.exportLink({
+          format: 'link-with-date',
+          title: '',
+          url: 'https://example.com',
+        });
+
+        expect(result).toBe('[(No Title) _202603](https://example.com)');
       });
     });
 

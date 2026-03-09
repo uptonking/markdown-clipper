@@ -1,4 +1,6 @@
-# Copy as Markdown for Chrome & Firefox
+# markdown-clipper
+
+> a fork of https://github.com/yorkxin/copy-as-markdown (MIT License)
 
 Do you often type Markdown code manually for a link or image, or even all tabs in a window, and feel tired? **Copy as Markdown** can help you!
 
@@ -73,12 +75,13 @@ e2e_test/          # Python E2E Tests
 - Handlers orchestrate user entry points (context menu, keyboard commands, runtime messages) and delegate to services.
 - UI scripts live under `src/ui` for popup/options pages; static assets under `src/static`.
 
-
 ### Install dependencies
 
 ```
+
 npm install -g web-ext
 npm install
+
 ```
 
 ## Debugging
@@ -98,7 +101,7 @@ For manual debugging without auto-reload:
 
 ### Firefox Testing with XPI
 
-To debug some behaviors such as Firefox restarts (for example, are context menus installed properly),
+To debug some behaviors such as Firefox restarts (for example, are context menus installed properly), 
 it is necessary to build an XPI package and install it on Firefox. Temporary Add-Ons won't be enough
 because they get uninstalled after Firefox quits.
 
@@ -113,14 +116,15 @@ See *[Testing persistent and restart features (Extension Workshop)](https://exte
 
 ### Signing XPI
 
-If sideloading on the release build of Firefox is necessary,
+If sideloading on the release build of Firefox is necessary, 
 here are the steps to sign the extesnion via AMO:
 
 1. Grab [API keys](https://addons.mozilla.org/en-US/developers/addon/api/key/) from Firefox Add-On
 2. Bump version in `manifest.json`. Note that AMO only accepts version numbers in `X.Y.Z` format where all 3 segments are numbers without zero prefixes.
 3. Run:
+    
 
-    ```shell
+```shell
     web-ext sign --channel=unlisted --api-key=... --api-secret=...
     ```
 
@@ -128,15 +132,15 @@ It'll create an XPI that is signed with your Firefox Add-Ons account. The file w
 uploaded to Add-On Developer Hub as unlisted.
 
 Note that Firefox Add-On keeps track of all the versions that have ever been uploaded, including
-'self-distributed' (`channel=unlisted`).
+'self-distributed' ( `channel=unlisted` ).
 
 See <https://extensionworkshop.com/documentation/develop/getting-started-with-web-ext/>
 
 ### Unit Tests
 
-Unit tests are under `./test/**/*.test.ts`.
+Unit tests are under `./test/**/*.test.ts` .
 
-To run, use `npm test`.
+To run, use `npm test` .
 
 ### Playwright E2E Tests
 
@@ -167,7 +171,7 @@ For an interactive shell that shares your working tree for faster iteration:
 docker run --rm -it --ipc=host -v "$(pwd)":/workspace copy-as-markdown-playwright bash
 ```
 
-Both commands execute exactly what CI does (`npm run test:e2e`), so you can reproduce CI-only flaky failures locally.
+Both commands execute exactly what CI does ( `npm run test:e2e` ), so you can reproduce CI-only flaky failures locally.
 
 ### QA
 
