@@ -1,5 +1,5 @@
 {
-  "name": "copy-as-markdown",
+  "name": "markdown-clipper",
   "version": "2.0.0",
   "description": "Copy Link or Image as Markdown code, a Web Extension",
   "type": "module",
@@ -20,6 +20,7 @@
     "build:ts": "tsc",
     "compile": "npm run build:ts && npm run compile-chrome && npm run compile-firefox-mv2 && npm run compile-firefox-mv3",
     "compile-chrome": "node scripts/compile.js chrome",
+    "compile-chromium": "npm run build:ts && node scripts/compile.js chrome",
     "compile-firefox-mv2": "node scripts/compile.js firefox-mv2",
     "compile-firefox-mv3": "node scripts/compile.js firefox-mv3",
     "build-chrome": "npm run compile-chrome && zip -r build/chrome.zip chrome/ -x \"*.DS_Store\" -x \".keep\"",
@@ -63,6 +64,7 @@
     "turndown": "^7.1.3",
     "typescript": "^5.4.0",
     "vitest": "^3.2.4",
+    "web-ext": "^9.4.0",
     "webextension-polyfill": "^0.12.0"
   }
 }

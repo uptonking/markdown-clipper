@@ -1,13 +1,24 @@
 import type { CustomFormatsProvider, MarkdownFormatter } from './shared-types.js';
+import type { CopyFormatTitleRewriter } from './copy-format-service.js';
 
 // Type Definitions
-export type LinkExportFormat = 'link' | 'custom-format';
+export type LinkExportFormat = 'link' | 'link-with-date' | 'custom-format';
 
 export interface LinkExportOptions {
   format: LinkExportFormat;
   title: string;
   url: string;
   customFormatSlot?: string | null;
+}
+
+const NoopCopyFormatTitleRewriter: CopyFormatTitleRewriter = {
+  async rewriteTitle({ title }) {
+    return title;
+  },
+};
+
+export function formatYearMonth(date: Date): string {
+  return `${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, '0')}`;
 }
 
 export function validateLinkExportOptions(options: LinkExportOptions): void {
@@ -39,6 +50,8 @@ export class LinkExportService {
   constructor(
     private markdown: MarkdownFormatter,
     private customFormatsProvider: CustomFormatsProvider,
+    private nowProvider: () => Date = () => new Date(),
+    private copyFormatTitleRewriter: CopyFormatTitleRewriter = NoopCopyFormatTitleRewriter,
   ) { }
 
   /**
@@ -56,15 +69,27 @@ export class LinkExportService {
     // Validate options
     validateLinkExportOptions(options);
 
+    const rewrittenTitle = await this.copyFormatTitleRewriter.rewriteTitle({
+      title: options.title,
+      format: options.format,
+      url: options.url,
+    });
+
     // Route to appropriate formatter
     switch (options.format) {
       case 'link':
-        return this.markdown.linkTo(options.title, options.url);
+        return this.markdown.linkTo(rewrittenTitle, options.url);
+
+      case 'link-with-date': {
+        const title = rewrittenTitle === '' ? '(No Title)' : this.markdown.escapeLinkText(rewrittenTitle);
+        const yyyymm = formatYearMonth(this.nowProvider());
+        return `[${title} _${yyyymm}](${options.url})`;
+      }
 
       case 'custom-format':
         // We already validated that customFormatSlot exists
         return renderCustomFormatLink(
-          options.title,
+          rewrittenTitle,
           options.url,
           options.customFormatSlot!,
           // TODO: implement flexible title formatter.

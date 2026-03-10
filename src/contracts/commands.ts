@@ -6,6 +6,7 @@
 export const KeyboardCommandIds = {
   SelectionAsMarkdown: 'selection-as-markdown',
   CurrentTabLink: 'current-tab-link',
+  CurrentTabLinkWithDate: 'current-tab-link-with-date',
   AllTabsLinkAsList: 'all-tabs-link-as-list',
   AllTabsLinkAsTaskList: 'all-tabs-link-as-task-list',
   AllTabsTitleAsList: 'all-tabs-title-as-list',
