@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "id": "medium-clean-byline",
+      "enabled": true,
+      "target": "title",
+      "formats": [
+        "link-with-date"
+      ],
+      "hosts": [
+        "medium.com"
+      ],
+      "patternType": "simple",
+      "oldText": "| by ** | Medium",
+      "newText": "| Medium",
+      "flags": "i",
+      "stopAfterMatch": true
+    },
+    {
+      "id": "linuxdo-clean-author",
+      "enabled": true,
+      "target": "title",
+      "formats": [
+        "link-with-date"
+      ],
+      "hosts": [
+        "linux.do"
+      ],
+      "patternType": "simple",
+      "oldText": " - ** / ** - LINUX DO",
+      "newText": " - LINUX DO",
+      "flags": "",
+      "stopAfterMatch": true
+    }
+  ]
+}

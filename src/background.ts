@@ -8,6 +8,7 @@ import { createBrowserBadgeService } from './services/badge-service.js';
 import { createBrowserContextMenuService } from './services/context-menu-service.js';
 import { createBrowserTabExportService } from './services/tab-export-service.js';
 import { createBrowserClipboardServiceController } from './services/clipboard-service.js';
+import { createBrowserCopyFormatService } from './services/copy-format-service.js';
 import { LinkExportService } from './services/link-export-service.js';
 import { createBrowserSelectionConverterService } from './services/selection-converter-service.js';
 import { createKeyboardBrowserCommandHandler } from './handlers/keyboard-command-handler.js';
@@ -30,7 +31,8 @@ const bookmarks = new Bookmarks({
 const badgeService = createBrowserBadgeService();
 const contextMenuService = createBrowserContextMenuService(CustomFormatsStorage, BuiltInStyleSettings);
 const tabExportService = createBrowserTabExportService(markdownInstance, CustomFormatsStorage);
-const linkExportService = new LinkExportService(markdownInstance, CustomFormatsStorage);
+const copyFormatService = createBrowserCopyFormatService(browser.runtime);
+const linkExportService = new LinkExportService(markdownInstance, CustomFormatsStorage, undefined, copyFormatService);
 
 // Check if ALWAYS_USE_NAVIGATOR_COPY_API flag is set
 const useNavigatorClipboard = Flags.alwaysUseNavigatorClipboard();

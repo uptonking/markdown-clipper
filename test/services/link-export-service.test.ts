@@ -5,6 +5,7 @@ import {
   renderCustomFormatLink,
   validateLinkExportOptions,
 } from '../../src/services/link-export-service.js';
+import type { CopyFormatTitleRewriter } from '../../src/services/copy-format-service.js';
 import type {
   CustomFormat,
   CustomFormatsProvider,
@@ -203,6 +204,34 @@ describe('linkExportService', () => {
         });
 
         expect(result).toBe('[(No Title) _202603](https://example.com)');
+      });
+
+      it('should apply rewritten title for link-with-date', async () => {
+        const mockProvider: CustomFormatsProvider = {
+          get: vi.fn().mockRejectedValue(new Error('Should not be called')),
+        };
+        const rewriteTitle = vi.fn(async () => 'QMD: Local hybrid search engine  by 95%+. | Medium');
+        const rewriter: CopyFormatTitleRewriter = { rewriteTitle };
+
+        const service = new LinkExportService(
+          mockMarkdown,
+          mockProvider,
+          () => new Date('2026-03-10T08:09:10Z'),
+          rewriter,
+        );
+
+        const result = await service.exportLink({
+          format: 'link-with-date',
+          title: 'QMD: Local hybrid search engine  by 95%+. | by DevSphere | Coding Nexus | Feb, 2026 | Medium',
+          url: 'https://medium.com/coding-nexus/example',
+        });
+
+        expect(result).toBe('[QMD: Local hybrid search engine  by 95%+. | Medium _202603](https://medium.com/coding-nexus/example)');
+        expect(rewriteTitle).toHaveBeenCalledWith({
+          title: 'QMD: Local hybrid search engine  by 95%+. | by DevSphere | Coding Nexus | Feb, 2026 | Medium',
+          format: 'link-with-date',
+          url: 'https://medium.com/coding-nexus/example',
+        });
       });
     });
 
