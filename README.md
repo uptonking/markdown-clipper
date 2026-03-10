@@ -177,6 +177,20 @@ Both commands execute exactly what CI does ( `npm run test:e2e` ), so you can re
 
 There is a [qa.html](./fixtures/qa.html) that includes various edge test cases. Open it in the browser, then try Copy as Markdown with the content in it.
 
+## publish to chrome web store
+
+```sh
+npm run compile-chromium
+
+mkdir -p build
+cd chrome
+zip -r ../build/markdown-clipper-webstore.zip . -x "*.DS_Store" -x ".keep"
+
+# Open Developer Dashboard and click Add new item. Upload build/markdown-clipper-webstore.zip.
+# For update, increase manifest.json → version, click Upload New Package
+
+```
+
 ## License
 
 See [MIT-LICENSE.txt](./MIT-LICENSE.txt)
